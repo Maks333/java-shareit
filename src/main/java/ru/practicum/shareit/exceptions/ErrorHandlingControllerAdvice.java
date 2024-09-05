@@ -47,8 +47,15 @@ public class ErrorHandlingControllerAdvice {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    String onNotFoundException(NotFoundException e) {
-        return e.getMessage();
+    ErrorMessage onNotFoundException(NotFoundException e) {
+        return new ErrorMessage(e.getMessage());
+    }
+
+    @ExceptionHandler(EmailIsNotUniqueException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    ErrorMessage onEmailIsNotUniqueException(EmailIsNotUniqueException e) {
+        return new ErrorMessage(e.getMessage());
     }
 }
 
@@ -62,5 +69,10 @@ class ValidationErrorResponse {
 @RequiredArgsConstructor
 class Violation {
     private final String fieldName;
+    private final String message;
+}
+
+@Data
+class ErrorMessage {
     private final String message;
 }
