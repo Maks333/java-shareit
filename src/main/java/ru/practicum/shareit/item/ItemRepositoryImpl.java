@@ -9,10 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Repository
@@ -79,7 +76,22 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> searchAll(String text) {
-        return List.of();
-    }
+        if (text.isBlank()) {
+            return Collections.emptyList();
+        }
 
+        List<Item> itemList = new ArrayList<>();
+        String lowerText = text.toLowerCase();
+        for (Map<Long, Item> itemMap : items.values()) {
+            for (Item item : itemMap.values()) {
+                String lowerDesc = item.getDescription().toLowerCase();
+                String lowerName = item.getName().toLowerCase();
+                if ((lowerDesc.contains(lowerText) || lowerName.contains(lowerText)) &&
+                        item.getAvailable()) {
+                    itemList.add(item);
+                }
+            }
+        }
+        return itemList;
+    }
 }
