@@ -34,9 +34,10 @@ public class UserRepositoryIml implements UserRepository {
     }
 
     private long nextUserId() {
-        return users.keySet()
+        long nextId = users.keySet()
                 .stream()
                 .max(Long::compareTo)
                 .orElse(1L);
+        return ++nextId;
     }
 }
