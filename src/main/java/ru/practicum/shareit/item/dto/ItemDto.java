@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import ru.practicum.shareit.item.markers.onItemCreate;
 
@@ -13,6 +14,6 @@ public class ItemDto {
     private String name;
     @NotEmpty(groups = onItemCreate.class, message = "Description must be present")
     private String description;
-    @NotEmpty(groups = onItemCreate.class, message = "Availability must be present")
+    @NotNull(groups = onItemCreate.class, message = "Availability must be present")
     private Boolean available;
 }
