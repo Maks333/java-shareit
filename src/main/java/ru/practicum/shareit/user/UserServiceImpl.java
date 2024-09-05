@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.markers.onUserCreate;
+import ru.practicum.shareit.user.markers.onUserUpdate;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(long userId) {
-        //User must be present
         return repository.findById(userId).orElseThrow(() ->
                 new NotFoundException("User with " + userId + " is not found"));
     }
@@ -24,15 +24,12 @@ public class UserServiceImpl implements UserService {
     @Validated(onUserCreate.class)
     @Override
     public User create(@Valid User user) {
-        //Name must be present +
-        //Email must be present +
-        //Check if Email is unique
-        //Email should follow [a-zA-z]+@[a-zA-z]+[.com|.ru] pattern +
         return repository.create(user);
     }
 
+    @Validated(onUserUpdate.class)
     @Override
-    public User update(long userId, User user) {
+    public User update(long userId, @Valid User user) {
         //User must be present
         //Name can be omitted
         //Email can be omitted

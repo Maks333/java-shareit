@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.EmailIsNotUniqueException;
+import ru.practicum.shareit.exceptions.NotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,20 @@ public class UserRepositoryIml implements UserRepository {
 
     @Override
     public User update(long userId, User user) {
-        return null;
+        User userToUpdate = users.get(userId);
+        if (userToUpdate == null) {
+            throw new NotFoundException("User with id " + userId + " is not found");
+        }
+
+        if (user.getName() != null) userToUpdate.setName(user.getName());
+        if (user.getEmail() != null) {
+            if (isEmailNotUnique(user.getEmail())) {
+                throw new EmailIsNotUniqueException("Email must be unique");
+            }
+            userToUpdate.setEmail(user.getEmail());
+        }
+        users.put(userId, userToUpdate);
+        return userToUpdate;
     }
 
     @Override
