@@ -1,7 +1,10 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.user.markers.onUserCreate;
 
 @Service
 @RequiredArgsConstructor
@@ -14,12 +17,13 @@ public class UserServiceImpl implements UserService {
         return repository.findById(userId);
     }
 
+    @Validated(onUserCreate.class)
     @Override
-    public User create(User user) {
-        //Name must be present
-        //Email must be present
+    public User create(@Valid User user) {
+        //Name must be present +
+        //Email must be present +
         //Check if Email is unique
-        //Email should follow [a-zA-z]+@[a-zA-z]+[.com|.ru] pattern
+        //Email should follow [a-zA-z]+@[a-zA-z]+[.com|.ru] pattern +
         return repository.create(user);
     }
 
