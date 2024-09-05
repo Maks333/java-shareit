@@ -19,11 +19,10 @@ public class UserRepositoryIml implements UserRepository {
 
     @Override
     public User create(User user) {
-        //validate uniqueness of email
         if (isEmailNotUnique(user.getEmail())) {
             throw new EmailIsNotUniqueException("Email must be unique");
         }
-        //generate new id
+
         long userId = nextUserId();
         user.setId(userId);
         users.put(userId, user);
@@ -50,7 +49,10 @@ public class UserRepositoryIml implements UserRepository {
 
     @Override
     public void delete(long userId) {
-
+        if (users.get(userId) == null) {
+            throw new NotFoundException("User with id " + userId + " is not found");
+        }
+        users.remove(userId);
     }
 
     private boolean isEmailNotUnique(String email) {
