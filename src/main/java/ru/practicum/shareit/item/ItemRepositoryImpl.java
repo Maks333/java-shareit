@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,8 @@ public class ItemRepositoryImpl implements ItemRepository {
         long itemId = nextItemId++;
         item.setId(itemId);
 
-        Map<Long, Item> itemMap = new HashMap<>();
+
+        Map<Long, Item> itemMap = items.getOrDefault(user.getId(), new HashMap<>());
         itemMap.put(itemId, item);
         items.put(user.getId(), itemMap);
         return item;
@@ -67,7 +69,12 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findAll(long userId) {
-        return List.of();
+        User user = service.findById(userId);
+        Map<Long, Item> userItems = items.get(user.getId());
+        if (userItems == null) {
+            return Collections.emptyList();
+        }
+        return userItems.values().stream().toList();
     }
 
     @Override
