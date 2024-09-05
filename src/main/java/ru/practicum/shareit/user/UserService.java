@@ -1,9 +1,11 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
+
 public interface UserService {
     User findById(long userId);
 
-    User create(User user);
+    User create(@Valid User user);
 
     User update(long userId, User user);
 

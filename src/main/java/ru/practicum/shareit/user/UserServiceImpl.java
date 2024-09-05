@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.markers.onUserCreate;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService {
         return repository.findById(userId).orElseThrow(() ->
                 new NotFoundException("User with " + userId + " is not found"));
     }
+
 
     @Validated(onUserCreate.class)
     @Override

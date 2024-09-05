@@ -1,5 +1,8 @@
 package ru.practicum.shareit.exceptions;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,15 +18,28 @@ import java.util.List;
 
 @ControllerAdvice
 public class ErrorHandlingControllerAdvice {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ResponseBody
+//    ValidationErrorResponse onMethodArgumentNotValidException(
+//            MethodArgumentNotValidException e) {
+//        ValidationErrorResponse error = new ValidationErrorResponse();
+//        for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
+//            error.getViolations().add(
+//                    new Violation(fieldError.getField(), fieldError.getDefaultMessage()));
+//        }
+//        return error;
+//    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    ValidationErrorResponse onMethodArgumentNotValidException(
-            MethodArgumentNotValidException e) {
+    ValidationErrorResponse onConstraintValidationException(
+            ConstraintViolationException e) {
         ValidationErrorResponse error = new ValidationErrorResponse();
-        for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
+        for (ConstraintViolation violation : e.getConstraintViolations()) {
             error.getViolations().add(
-                    new Violation(fieldError.getField(), fieldError.getDefaultMessage()));
+                    new Violation(violation.getPropertyPath().toString(), violation.getMessage()));
         }
         return error;
     }
@@ -42,6 +58,7 @@ class ValidationErrorResponse {
 
 }
 
+@Data
 @RequiredArgsConstructor
 class Violation {
     private final String fieldName;
