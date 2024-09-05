@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.markers.onItemCreate;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
 
-    @Validated(onItemCreate.class)
     @Override
     public Item create(long userId, @Valid ItemDto itemDto) {
         return itemRepository.create(userId, itemDto);

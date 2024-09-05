@@ -35,7 +35,20 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item update(long userId, long itemId, ItemDto itemDto) {
-        return null;
+        User user = service.findById(userId);
+        Map<Long, Item> userItems = items.get(user.getId());
+        if (userItems == null) {
+            throw new NotFoundException("User with id " + userId + " is not found");
+        }
+        Item item = userItems.get(itemId);
+        if (item == null) {
+            throw new NotFoundException("Item with id " + itemId + " is not found");
+        }
+
+        if (itemDto.getName() != null) item.setName(itemDto.getName());
+        if (itemDto.getDescription() != null) item.setDescription(itemDto.getDescription());
+        if (itemDto.getAvailable() != null) item.setAvailable(itemDto.getAvailable());
+        return item;
     }
 
     @Override
