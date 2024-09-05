@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.markers.onUserCreate;
 
 @Service
@@ -14,7 +15,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(long userId) {
         //User must be present
-        return repository.findById(userId);
+        return repository.findById(userId).orElseThrow(() ->
+                new NotFoundException("User with " + userId + " is not found"));
     }
 
     @Validated(onUserCreate.class)

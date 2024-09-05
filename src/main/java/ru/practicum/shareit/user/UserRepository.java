@@ -1,7 +1,9 @@
 package ru.practicum.shareit.user;
 
+import java.util.Optional;
+
 public interface UserRepository {
-    User findById(long userId);
+    Optional<User> findById(long userId);
 
     User create(User user);
 

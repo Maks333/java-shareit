@@ -27,6 +27,13 @@ public class ErrorHandlingControllerAdvice {
         }
         return error;
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    String onNotFoundException(NotFoundException e) {
+        return e.getMessage();
+    }
 }
 
 @Getter

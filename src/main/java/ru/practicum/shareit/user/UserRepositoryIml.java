@@ -4,14 +4,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryIml implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
 
     @Override
-    public User findById(long userId) {
-        return null;
+    public Optional<User> findById(long userId) {
+        return Optional.of(users.get(userId));
     }
 
     @Override
