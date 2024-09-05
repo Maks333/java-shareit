@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @ControllerAdvice
 public class ErrorHandlingControllerAdvice {
 //    @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -36,6 +38,7 @@ public class ErrorHandlingControllerAdvice {
     @ResponseBody
     ValidationErrorResponse onConstraintValidationException(
             ConstraintViolationException e) {
+        log.error("Validation error: {}", e.getMessage());
         ValidationErrorResponse error = new ValidationErrorResponse();
         for (ConstraintViolation violation : e.getConstraintViolations()) {
             error.getViolations().add(
@@ -48,6 +51,7 @@ public class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     ErrorMessage onNotFoundException(NotFoundException e) {
+        log.error("NotFoundException: {}", e.getMessage());
         return new ErrorMessage(e.getMessage());
     }
 
@@ -55,6 +59,7 @@ public class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     ErrorMessage onEmailIsNotUniqueException(EmailIsNotUniqueException e) {
+        log.error("EmailIsNotUniqueException: {}", e.getMessage());
         return new ErrorMessage(e.getMessage());
     }
 }
