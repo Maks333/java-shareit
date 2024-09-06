@@ -3,8 +3,8 @@ package ru.practicum.shareit.user;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-import ru.practicum.shareit.user.markers.onUserCreate;
-import ru.practicum.shareit.user.markers.onUserUpdate;
+import ru.practicum.shareit.user.markers.OnUserCreate;
+import ru.practicum.shareit.user.markers.OnUserUpdate;
 
 /**
  * TODO Sprint add-controllers.
@@ -12,9 +12,9 @@ import ru.practicum.shareit.user.markers.onUserUpdate;
 @Data
 public class User {
     private Long id;
-    @NotEmpty(groups = onUserCreate.class, message = "Name must be present")
+    @NotEmpty(groups = OnUserCreate.class, message = "Name must be present")
     private String name;
-    @NotEmpty(groups = onUserCreate.class, message = "Email must be present")
-    @Email(groups = {onUserCreate.class, onUserUpdate.class}, message = "Email should be valid")
+    @NotEmpty(groups = OnUserCreate.class, message = "Email must be present")
+    @Email(groups = {OnUserCreate.class, OnUserUpdate.class}, message = "Email should be valid")
     private String email;
 }

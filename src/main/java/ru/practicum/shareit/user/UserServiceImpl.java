@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.exceptions.NotFoundException;
-import ru.practicum.shareit.user.markers.onUserCreate;
-import ru.practicum.shareit.user.markers.onUserUpdate;
+import ru.practicum.shareit.user.markers.OnUserCreate;
+import ru.practicum.shareit.user.markers.OnUserUpdate;
 
 @Service
 @RequiredArgsConstructor
@@ -20,14 +20,13 @@ public class UserServiceImpl implements UserService {
                 new NotFoundException("User with " + userId + " is not found"));
     }
 
-
-    @Validated(onUserCreate.class)
+    @Validated(OnUserCreate.class)
     @Override
     public User create(@Valid User user) {
         return repository.create(user);
     }
 
-    @Validated(onUserUpdate.class)
+    @Validated(OnUserUpdate.class)
     @Override
     public User update(long userId, @Valid User user) {
         return repository.update(userId, user);
