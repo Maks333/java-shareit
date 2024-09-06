@@ -14,7 +14,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
-    private static long nextItemId = 1;
+    private static long itemId = 1;
     private final UserService service;
     private final Map<Long, Map<Long, Item>> items = new HashMap<>();
 
@@ -22,7 +22,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item create(long userId, ItemDto itemDto) {
         User user = service.findById(userId);
         Item item = ItemMapper.toItem(itemDto);
-        long itemId = nextItemId++;
+        long itemId = nextItemId();
         item.setId(itemId);
 
 
@@ -93,5 +93,9 @@ public class ItemRepositoryImpl implements ItemRepository {
             }
         }
         return itemList;
+    }
+
+    private static long nextItemId() {
+        return itemId++;
     }
 }
