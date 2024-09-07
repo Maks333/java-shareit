@@ -35,8 +35,8 @@ public class ItemRepositoryImpl implements ItemRepository {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
 
-        Item itemToUpdate = Optional.ofNullable(items.get(itemId)).
-                orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
+        Item itemToUpdate = Optional.ofNullable(items.get(itemId))
+                .orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
 
         if (!itemToUpdate.getOwner().equals(user)) {
             throw new UnauthorizedAccessException(
@@ -54,8 +54,8 @@ public class ItemRepositoryImpl implements ItemRepository {
         repository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
 
-        return Optional.ofNullable(items.get(itemId)).
-                orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
+        return Optional.ofNullable(items.get(itemId))
+                .orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
     }
 
     @Override
