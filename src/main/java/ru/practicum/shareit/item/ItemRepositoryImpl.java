@@ -3,7 +3,6 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
@@ -29,23 +28,23 @@ public class ItemRepositoryImpl implements ItemRepository {
         items.put(itemId, item);
         return item;
     }
-    //TODO: fix
+
     @Override
-    public Item update(long userId, long itemId, ItemDto itemDto) {
+    public Item update(long userId, long itemId, Item item) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
 
-        Item item = Optional.ofNullable(items.get(itemId)).
+        Item itemToUpdate = Optional.ofNullable(items.get(itemId)).
                 orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
 
-        if (!item.getOwner().equals(user)) {
+        if (!itemToUpdate.getOwner().equals(user)) {
             throw new NotFoundException("Item with id " + itemId + " does not belong to user with id + " + userId);
         }
 
-        if (itemDto.getName() != null) item.setName(itemDto.getName());
-        if (itemDto.getDescription() != null) item.setDescription(itemDto.getDescription());
-        if (itemDto.getAvailable() != null) item.setAvailable(itemDto.getAvailable());
-        return item;
+        if (item.getName() != null) itemToUpdate.setName(item.getName());
+        if (item.getDescription() != null) itemToUpdate.setDescription(item.getDescription());
+        if (item.getAvailable() != null) itemToUpdate.setAvailable(item.getAvailable());
+        return itemToUpdate;
     }
 
     @Override
