@@ -28,7 +28,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         items.put(itemId, item);
         return item;
     }
-
+    //TODO: fix
     @Override
     public Item update(long userId, long itemId, ItemDto itemDto) {
         User user = service.findById(userId);

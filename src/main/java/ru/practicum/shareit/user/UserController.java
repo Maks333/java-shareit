@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.dto.UserDto;
 
 /**
  * TODO Sprint add-controllers.
@@ -18,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public UserDto create(@RequestBody UserDto user) {
         return service.create(user);
     }
 

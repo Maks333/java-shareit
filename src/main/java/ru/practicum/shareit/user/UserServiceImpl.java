@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.markers.OnUserCreate;
 import ru.practicum.shareit.user.markers.OnUserUpdate;
 
@@ -22,8 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Validated(OnUserCreate.class)
     @Override
-    public User create(@Valid User user) {
-        return repository.create(user);
+    public UserDto create(@Valid UserDto userDto) {
+        User user = UserMapper.fromUserDto(userDto);
+        return UserMapper.toUserDto(repository.create(user));
     }
 
     @Validated(OnUserUpdate.class)
