@@ -59,24 +59,11 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> searchAll(String text) {
-//        if (text.isBlank()) {
-//            return Collections.emptyList();
-//        }
-//
-//        List<Item> itemList = new ArrayList<>();
-//        String lowerText = text.toLowerCase();
-//        for (Map<Long, Item> itemMap : items.values()) {
-//            for (Item item : itemMap.values()) {
-//                String lowerDesc = item.getDescription().toLowerCase();
-//                String lowerName = item.getName().toLowerCase();
-//                if ((lowerDesc.contains(lowerText) || lowerName.contains(lowerText)) &&
-//                        item.getAvailable()) {
-//                    itemList.add(item);
-//                }
-//            }
-//        }
-//        return itemList;
-        return List.of();
+        return items.values().stream()
+                .filter(item -> item.getDescription().toLowerCase().contains(text) ||
+                        item.getName().toLowerCase().contains(text))
+                .filter(Item::getAvailable)
+                .toList();
     }
 
     private long nextItemId() {

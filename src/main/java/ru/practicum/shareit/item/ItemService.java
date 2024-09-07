@@ -2,7 +2,6 @@ package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
@@ -15,5 +14,5 @@ public interface ItemService {
 
     List<ItemDto> findAll(long userId);
 
-    List<Item> searchAll(String text);
+    List<ItemDto> searchAll(String text);
 }

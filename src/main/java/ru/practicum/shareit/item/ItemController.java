@@ -40,7 +40,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<Item> searchAll(@RequestParam String text) {
+    public List<ItemDto> searchAll(@RequestParam String text) {
         return service.searchAll(text);
     }
 }

@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -40,7 +41,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> searchAll(String text) {
-        return itemRepository.searchAll(text);
+    public List<ItemDto> searchAll(String text) {
+        if (text.isBlank()) {
+            return Collections.emptyList();
+        }
+        return itemRepository.searchAll(text.toLowerCase()).stream()
+                .map(ItemMapper::toItemDto)
+                .toList();
     }
 }
