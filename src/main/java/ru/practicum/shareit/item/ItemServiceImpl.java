@@ -33,8 +33,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> findAll(long userId) {
-        return itemRepository.findAll(userId);
+    public List<ItemDto> findAll(long userId) {
+        return itemRepository.findAll(userId).stream()
+                .map(ItemMapper::toItemDto)
+                .toList();
     }
 
     @Override

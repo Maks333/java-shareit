@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -49,13 +51,10 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findAll(long userId) {
-//        User user = service.findById(userId);
-//        Map<Long, Item> userItems = items.get(user.getId());
-//        if (userItems == null) {
-//            return Collections.emptyList();
-//        }
-//        return userItems.values().stream().toList();
-        return List.of();
+        User user = service.findById(userId);
+        return items.values().stream()
+                .filter(item -> item.getOwner().getId() == userId)
+                .toList();
     }
 
     @Override
