@@ -9,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class ItemDto {
+    private Long id;
     @NotEmpty(message = "Name must be present")
     private String name;
     @NotEmpty(message = "Description must be present")

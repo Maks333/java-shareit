@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -16,8 +17,9 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
 
     @Override
-    public Item create(long userId, @Valid ItemDto itemDto) {
-        return itemRepository.create(userId, itemDto);
+    public ItemDto create(long userId, @Valid ItemDto itemDto) {
+        Item item = ItemMapper.toItem(itemDto);
+        return ItemMapper.toItemDto(itemRepository.create(userId, item));
     }
 
     @Override
@@ -26,8 +28,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item findById(long userId, long itemId) {
-        return itemRepository.findById(userId, itemId);
+    public ItemDto findById(long userId, long itemId) {
+        return ItemMapper.toItemDto(itemRepository.findById(userId, itemId));
     }
 
     @Override

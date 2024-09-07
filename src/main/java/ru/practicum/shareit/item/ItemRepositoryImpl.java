@@ -14,28 +14,23 @@ import java.util.*;
 @RequiredArgsConstructor
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
-    private static long itemId = 1;
     private final UserService service;
-    private final Map<Long, Map<Long, Item>> items = new HashMap<>();
+    private final Map<Long, Item> items = new HashMap<>();
 
     @Override
-    public Item create(long userId, ItemDto itemDto) {
+    public Item create(long userId, Item item) {
         User user = service.findById(userId);
-        Item item = ItemMapper.toItem(itemDto);
         long itemId = nextItemId();
         item.setId(itemId);
-
-
-        Map<Long, Item> itemMap = items.getOrDefault(user.getId(), new HashMap<>());
-        itemMap.put(itemId, item);
-        items.put(user.getId(), itemMap);
+        item.setOwner(user);
+        items.put(itemId, item);
         return item;
     }
 
     @Override
     public Item update(long userId, long itemId, ItemDto itemDto) {
         User user = service.findById(userId);
-        Map<Long, Item> userItems = items.get(user.getId());
+        Map<Long, Item> userItems = new HashMap<>();
         if (userItems == null) {
             throw new NotFoundException("User with id " + userId + " is not found");
         }
@@ -53,49 +48,48 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item findById(long userId, long itemId) {
         User user = service.findById(userId);
-        Map<Long, Item> userItems = items.get(user.getId());
-        if (userItems == null) {
-            throw new NotFoundException("User with id " + userId + " is not found");
-        }
-        Item item = userItems.get(itemId);
-        if (item == null) {
-            throw new NotFoundException("Item with id " + itemId + " is not found");
-        }
-        return item;
+        return Optional.ofNullable(items.get(itemId)).
+                orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
     }
 
     @Override
     public List<Item> findAll(long userId) {
-        User user = service.findById(userId);
-        Map<Long, Item> userItems = items.get(user.getId());
-        if (userItems == null) {
-            return Collections.emptyList();
-        }
-        return userItems.values().stream().toList();
+//        User user = service.findById(userId);
+//        Map<Long, Item> userItems = items.get(user.getId());
+//        if (userItems == null) {
+//            return Collections.emptyList();
+//        }
+//        return userItems.values().stream().toList();
+        return List.of();
     }
 
     @Override
     public List<Item> searchAll(String text) {
-        if (text.isBlank()) {
-            return Collections.emptyList();
-        }
-
-        List<Item> itemList = new ArrayList<>();
-        String lowerText = text.toLowerCase();
-        for (Map<Long, Item> itemMap : items.values()) {
-            for (Item item : itemMap.values()) {
-                String lowerDesc = item.getDescription().toLowerCase();
-                String lowerName = item.getName().toLowerCase();
-                if ((lowerDesc.contains(lowerText) || lowerName.contains(lowerText)) &&
-                        item.getAvailable()) {
-                    itemList.add(item);
-                }
-            }
-        }
-        return itemList;
+//        if (text.isBlank()) {
+//            return Collections.emptyList();
+//        }
+//
+//        List<Item> itemList = new ArrayList<>();
+//        String lowerText = text.toLowerCase();
+//        for (Map<Long, Item> itemMap : items.values()) {
+//            for (Item item : itemMap.values()) {
+//                String lowerDesc = item.getDescription().toLowerCase();
+//                String lowerName = item.getName().toLowerCase();
+//                if ((lowerDesc.contains(lowerText) || lowerName.contains(lowerText)) &&
+//                        item.getAvailable()) {
+//                    itemList.add(item);
+//                }
+//            }
+//        }
+//        return itemList;
+        return List.of();
     }
 
-    private static long nextItemId() {
-        return itemId++;
+    private long nextItemId() {
+        long nextId = items.keySet()
+                .stream()
+                .max(Long::compareTo)
+                .orElse(1L);
+        return ++nextId;
     }
 }
