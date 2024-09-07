@@ -51,4 +51,12 @@ public class ErrorHandlingControllerAdvice {
         log.error("MissingRequestHeaderException: {}", e.getMessage());
         return new ErrorMessage(e.getMessage());
     }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    ErrorMessage onUnauthorizedAccessException(UnauthorizedAccessException e) {
+        log.error("UnauthorizedAccessException: {}", e.getMessage());
+        return new ErrorMessage(e.getMessage());
+    }
 }

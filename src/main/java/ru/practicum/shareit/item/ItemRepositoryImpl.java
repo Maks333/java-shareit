@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.exceptions.UnauthorizedAccessException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
@@ -38,7 +39,8 @@ public class ItemRepositoryImpl implements ItemRepository {
                 orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
 
         if (!itemToUpdate.getOwner().equals(user)) {
-            throw new NotFoundException("Item with id " + itemId + " does not belong to user with id + " + userId);
+            throw new UnauthorizedAccessException(
+                    "Item with id " + itemId + " does not belong to user with id + " + userId);
         }
 
         if (item.getName() != null) itemToUpdate.setName(item.getName());
