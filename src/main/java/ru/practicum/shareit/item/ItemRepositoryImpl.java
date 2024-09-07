@@ -6,7 +6,7 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserService;
+import ru.practicum.shareit.user.UserRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +16,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
-    private final UserService service;
+    private final UserRepository repository;
     private final Map<Long, Item> items = new HashMap<>();
 
     @Override
     public Item create(long userId, Item item) {
-        User user = service.findById(userId);
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
         long itemId = nextItemId();
         item.setId(itemId);
         item.setOwner(user);
@@ -31,10 +32,15 @@ public class ItemRepositoryImpl implements ItemRepository {
     //TODO: fix
     @Override
     public Item update(long userId, long itemId, ItemDto itemDto) {
-        User user = service.findById(userId);
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
 
         Item item = Optional.ofNullable(items.get(itemId)).
                 orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
+
+        if (!item.getOwner().equals(user)) {
+            throw new NotFoundException("Item with id " + itemId + " does not belong to user with id + " + userId);
+        }
 
         if (itemDto.getName() != null) item.setName(itemDto.getName());
         if (itemDto.getDescription() != null) item.setDescription(itemDto.getDescription());
@@ -44,14 +50,18 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item findById(long userId, long itemId) {
-        User user = service.findById(userId);
+        repository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
+
         return Optional.ofNullable(items.get(itemId)).
                 orElseThrow(() -> new NotFoundException("Item with id " + itemId + " is not found"));
     }
 
     @Override
     public List<Item> findAll(long userId) {
-        User user = service.findById(userId);
+        repository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
+
         return items.values().stream()
                 .filter(item -> item.getOwner().getId() == userId)
                 .toList();
