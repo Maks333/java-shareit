@@ -9,7 +9,7 @@ import java.util.List;
 public interface ItemService {
     ItemDto create(long userId, @Valid ItemDto itemDto);
 
-    Item update(long userId, long itemId, ItemDto itemDto);
+    ItemDto update(long userId, long itemId, ItemDto itemDto);
 
     ItemDto findById(long userId, long itemId);
 
