@@ -43,7 +43,6 @@ public class UserRepositoryImpl implements UserRepository {
             }
             userToUpdate.setEmail(user.getEmail());
         }
-        users.put(userId, userToUpdate);
         return userToUpdate;
     }
 
