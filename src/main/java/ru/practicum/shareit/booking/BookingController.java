@@ -36,7 +36,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<Booking> getAllBookingsMadeByUser
+    public List<BookingDto> getAllBookingsMadeByUser
             (@RequestHeader("X-Sharer-User-Id") long userId,
              @RequestParam(name = "state", required = false, defaultValue = "ALL") BookingState state) {
         return service.getAllBookingsMadeByUser(userId, state);

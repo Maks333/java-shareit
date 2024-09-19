@@ -17,7 +17,7 @@ public interface BookingService {
 
     BookingDto getBooking(long bookingId, long userId);
 
-    List<Booking> getAllBookingsMadeByUser(long userId, BookingState state);
+    List<BookingDto> getAllBookingsMadeByUser(long userId, BookingState state);
 
     List<Booking> getAllBookingsForAllItemsOfUser(long userId, BookingState state);
 }

@@ -14,7 +14,9 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,8 +74,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingsMadeByUser(long userId, BookingState state) {
-        return List.of();
+    public List<BookingDto> getAllBookingsMadeByUser(long userId, BookingState state) {
+        switch (state) {
+            default -> {
+                return bookingRepository.findAllByBookerId(userId).stream()
+                        .map(BookingMapper::toBookingDto)
+                        .collect(Collectors.toList());
+            }
+        }
     }
 
     @Override
