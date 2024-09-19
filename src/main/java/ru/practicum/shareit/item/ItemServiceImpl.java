@@ -2,10 +2,15 @@ package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.item.dto.ItemBookingDateProjection;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithDates;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -20,6 +25,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     public ItemDto create(long userId, @Valid ItemDto itemDto) {
@@ -51,10 +57,23 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> findAll(long userId) {
-        return itemRepository.findAllByOwnerId(userId).stream()
-                .map(ItemMapper::toItemDto)
+    public List<ItemDtoWithDates> findAll(long userId) {
+        PageRequest page = PageRequest.of(0, 2);
+        List<ItemDtoWithDates> items = itemRepository.findAllByOwnerId(userId).stream()
+                .map(ItemMapper::toItemDtoWithDates)
                 .toList();
+
+        items.forEach(item -> {
+            Page<ItemBookingDateProjection> pages = bookingRepository.findItemBookingDates(item.getId(), page);
+            try {
+                List<ItemBookingDateProjection> dates = pages.getContent();
+                item.setLastBookingDates(dates.getFirst());
+                item.setNextBookingDates(dates.getLast());
+            } catch (RuntimeException ignored) {
+            }
+        });
+
+        return items;
     }
 
     @Override
