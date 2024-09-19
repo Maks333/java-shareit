@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -78,13 +79,14 @@ public class BookingServiceImpl implements BookingService {
         userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User with id " + userId + " is not found"));
 
+        Sort sort = Sort.by("startDate").ascending();
         List<Booking> bookings = switch (state) {
-            case PAST -> bookingRepository.findAllByBookerIdAndEndDateBefore(userId, LocalDateTime.now());
-            case CURRENT -> bookingRepository.findAllCurrentBookingsOfUser(userId, LocalDateTime.now());
-            case FUTURE -> bookingRepository.findAllByBookerIdAndStartDateAfter(userId, LocalDateTime.now());
-            case WAITING -> bookingRepository.findAllByBookerIdAndStatusIs(userId, BookingStatus.WAITING);
-            case REJECTED -> bookingRepository.findAllByBookerIdAndStatusIs(userId, BookingStatus.REJECTED);
-            default -> bookingRepository.findAllByBookerId(userId);
+            case PAST -> bookingRepository.findAllByBookerIdAndEndDateBefore(userId, LocalDateTime.now(), sort);
+            case CURRENT -> bookingRepository.findAllCurrentBookingsOfUser(userId, LocalDateTime.now(), sort);
+            case FUTURE -> bookingRepository.findAllByBookerIdAndStartDateAfter(userId, LocalDateTime.now(), sort);
+            case WAITING -> bookingRepository.findAllByBookerIdAndStatusIs(userId, BookingStatus.WAITING, sort);
+            case REJECTED -> bookingRepository.findAllByBookerIdAndStatusIs(userId, BookingStatus.REJECTED, sort);
+            default -> bookingRepository.findAllByBookerId(userId, sort);
         };
         return bookings.stream()
                 .map(BookingMapper::toBookingDto)
@@ -96,13 +98,14 @@ public class BookingServiceImpl implements BookingService {
         userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User with id " + userId + " is not found"));
 
+        Sort sort = Sort.by("startDate").ascending();
         List<Booking> bookings = switch (state) {
-            case PAST -> bookingRepository.findAllByItemOwnerIdAndEndDateBefore(userId, LocalDateTime.now());
-            case CURRENT -> bookingRepository.findAllCurrentBookingsOfSharer(userId, LocalDateTime.now());
-            case FUTURE -> bookingRepository.findAllByItemOwnerIdAndStartDateAfter(userId, LocalDateTime.now());
-            case WAITING -> bookingRepository.findAllByItemOwnerIdAndStatusIs(userId, BookingStatus.WAITING);
-            case REJECTED -> bookingRepository.findAllByItemOwnerIdAndStatusIs(userId, BookingStatus.REJECTED);
-            default -> bookingRepository.findAllByItemOwnerId(userId);
+            case PAST -> bookingRepository.findAllByItemOwnerIdAndEndDateBefore(userId, LocalDateTime.now(), sort);
+            case CURRENT -> bookingRepository.findAllCurrentBookingsOfSharer(userId, LocalDateTime.now(), sort);
+            case FUTURE -> bookingRepository.findAllByItemOwnerIdAndStartDateAfter(userId, LocalDateTime.now(), sort);
+            case WAITING -> bookingRepository.findAllByItemOwnerIdAndStatusIs(userId, BookingStatus.WAITING, sort);
+            case REJECTED -> bookingRepository.findAllByItemOwnerIdAndStatusIs(userId, BookingStatus.REJECTED, sort);
+            default -> bookingRepository.findAllByItemOwnerId(userId, sort);
         };
         return bookings.stream()
                 .map(BookingMapper::toBookingDto)
