@@ -14,7 +14,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,7 +84,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingsForAllItemsOfUser(long userId, BookingState state) {
-        return List.of();
+    public List<BookingDto> getAllBookingsForAllItemsOfUser(long userId, BookingState state) {
+        userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User with id " + userId + " is not found"));
+        return switch (state) {
+            default -> bookingRepository.findAllByItemOwnerId(userId).stream()
+                        .map(BookingMapper::toBookingDto)
+                        .collect(Collectors.toList());
+
+        };
     }
 }
