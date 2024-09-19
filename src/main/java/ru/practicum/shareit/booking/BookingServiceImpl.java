@@ -75,6 +75,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getAllBookingsMadeByUser(long userId, BookingState state) {
+        userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User with id " + userId + " is not found"));
+
         List<Booking> bookings = switch (state) {
             case PAST -> bookingRepository.findAllByBookerIdAndEndDateBefore(userId, LocalDateTime.now());
             case CURRENT -> bookingRepository.findAllCurrentBookingsOfUser(userId, LocalDateTime.now());
@@ -92,18 +95,17 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getAllBookingsForAllItemsOfUser(long userId, BookingState state) {
         userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User with id " + userId + " is not found"));
-        return switch (state) {
-//            case PAST -> bookingRepository.findAllByBookerIdAndEndDateBefore(LocalDateTime.now()).stream()
-//                    .map(BookingMapper::toBookingDto)
-//                    .collect(Collectors.toList());
-//            case FUTURE -> ;
-//            case CURRENT -> ;
-//            case WAITING -> ;
-//            case REJECTED -> ;
-            default -> bookingRepository.findAllByItemOwnerId(userId).stream()
-                    .map(BookingMapper::toBookingDto)
-                    .collect(Collectors.toList());
 
+        List<Booking> bookings = switch (state) {
+            case PAST -> bookingRepository.findAllByItemOwnerIdAndEndDateBefore(userId, LocalDateTime.now());
+            case CURRENT -> bookingRepository.findAllCurrentBookingsOfSharer(userId, LocalDateTime.now());
+            case FUTURE -> bookingRepository.findAllByItemOwnerIdAndStartDateAfter(userId, LocalDateTime.now());
+            case WAITING -> bookingRepository.findAllByItemOwnerIdAndStatusIs(userId, BookingStatus.WAITING);
+            case REJECTED -> bookingRepository.findAllByItemOwnerIdAndStatusIs(userId, BookingStatus.REJECTED);
+            default -> bookingRepository.findAllByItemOwnerId(userId);
         };
+        return bookings.stream()
+                .map(BookingMapper::toBookingDto)
+                .collect(Collectors.toList());
     }
 }
