@@ -8,10 +8,10 @@ import java.time.format.DateTimeFormatter;
 
 public class BookingMapper {
 
-    public static Booking toBookingFromDto(BookingCreateDto bookingCreateDto) {
+    public static Booking toBooking(BookingCreateDto bookingDto) {
         Booking booking = new Booking();
-        booking.setStartDate(bookingCreateDto.getStart());
-        booking.setEndDate(bookingCreateDto.getEnd());
+        booking.setStartDate(bookingDto.getStart());
+        booking.setEndDate(bookingDto.getEnd());
         return  booking;
     }
 
