@@ -12,7 +12,8 @@ public interface BookingService {
     @Transactional
     BookingDto createBooking(long userId, @Valid BookingCreateDto booking);
 
-    Booking changeBookingStatus(long userId, long bookingId, boolean approved);
+    @Transactional
+    BookingDto changeBookingStatus(long userId, long bookingId, boolean approved);
 
     Booking getBooking(long bookingId, long id);
 

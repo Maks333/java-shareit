@@ -17,6 +17,7 @@ public class BookingMapper {
 
     public static BookingDto toBookingDto(Booking booking) {
         BookingDto bookingDto = new BookingDto();
+        bookingDto.setId(booking.getId());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd'T'HH:mm:ss");
         bookingDto.setStart(formatter.format(booking.getStartDate()));
         bookingDto.setEnd(formatter.format(booking.getEndDate()));
