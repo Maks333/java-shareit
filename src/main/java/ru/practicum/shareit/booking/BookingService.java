@@ -15,7 +15,7 @@ public interface BookingService {
     @Transactional
     BookingDto changeBookingStatus(long userId, long bookingId, boolean approved);
 
-    Booking getBooking(long bookingId, long id);
+    BookingDto getBooking(long bookingId, long userId);
 
     List<Booking> getAllBookingsMadeByUser(long userId, BookingState state);
 

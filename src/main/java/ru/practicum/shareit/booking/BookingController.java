@@ -30,9 +30,9 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingId}")
-    public Booking getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingDto getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                               @PathVariable long bookingId) {
-        return service.getBooking(userId, bookingId);
+        return service.getBooking(bookingId, userId);
     }
 
     @GetMapping
