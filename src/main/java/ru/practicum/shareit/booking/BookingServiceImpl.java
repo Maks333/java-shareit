@@ -14,6 +14,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,13 +75,17 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getAllBookingsMadeByUser(long userId, BookingState state) {
-        switch (state) {
-            default -> {
-                return bookingRepository.findAllByBookerId(userId).stream()
-                        .map(BookingMapper::toBookingDto)
-                        .collect(Collectors.toList());
-            }
-        }
+        List<Booking> bookings = switch (state) {
+            case PAST -> bookingRepository.findAllByBookerIdAndEndDateBefore(userId, LocalDateTime.now());
+            case CURRENT -> bookingRepository.findAllCurrentBookingsOfUser(userId, LocalDateTime.now());
+            case FUTURE -> bookingRepository.findAllByBookerIdAndStartDateAfter(userId, LocalDateTime.now());
+            case WAITING -> bookingRepository.findAllByBookerIdAndStatusIs(userId, BookingStatus.WAITING);
+            case REJECTED -> bookingRepository.findAllByBookerIdAndStatusIs(userId, BookingStatus.REJECTED);
+            default -> bookingRepository.findAllByBookerId(userId);
+        };
+        return bookings.stream()
+                .map(BookingMapper::toBookingDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -88,9 +93,16 @@ public class BookingServiceImpl implements BookingService {
         userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User with id " + userId + " is not found"));
         return switch (state) {
+//            case PAST -> bookingRepository.findAllByBookerIdAndEndDateBefore(LocalDateTime.now()).stream()
+//                    .map(BookingMapper::toBookingDto)
+//                    .collect(Collectors.toList());
+//            case FUTURE -> ;
+//            case CURRENT -> ;
+//            case WAITING -> ;
+//            case REJECTED -> ;
             default -> bookingRepository.findAllByItemOwnerId(userId).stream()
-                        .map(BookingMapper::toBookingDto)
-                        .collect(Collectors.toList());
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
 
         };
     }
