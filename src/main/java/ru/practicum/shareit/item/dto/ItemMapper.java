@@ -19,4 +19,11 @@ public class ItemMapper {
         itemDto.setAvailable(item.getAvailable());
         return itemDto;
     }
+
+    public static BookedItemDto toBookedItemDto(Item item) {
+        BookedItemDto bookedItemDto = new BookedItemDto();
+        bookedItemDto.setId(item.getId());
+        bookedItemDto.setName(item.getName());
+        return bookedItemDto;
+    }
 }

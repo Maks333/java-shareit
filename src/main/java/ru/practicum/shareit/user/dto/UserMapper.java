@@ -18,4 +18,10 @@ public class UserMapper {
         user.setName(userDto.getName());
         return user;
     }
+
+    public static BookerDto toBookerDto(User user) {
+        BookerDto bookerDto = new BookerDto();
+        bookerDto.setId(user.getId());
+        return bookerDto;
+    }
 }
