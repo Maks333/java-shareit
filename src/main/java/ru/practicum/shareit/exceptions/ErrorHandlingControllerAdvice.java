@@ -60,4 +60,12 @@ public class ErrorHandlingControllerAdvice {
         log.error("DataIntegrityViolationException: {}", e.getMostSpecificCause().getMessage());
         return new ErrorMessage(e.getMostSpecificCause().getMessage());
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    ErrorMessage onRuntimeException(RuntimeException e) {
+        log.error("RuntimeException: {}", e.getMessage());
+        return new ErrorMessage(e.getMessage());
+    }
 }
