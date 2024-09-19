@@ -24,13 +24,13 @@ public class BookingController {
     public Booking changeBookingStatus(@RequestHeader("X-Sharer-User-Id") long userId,
                                        @PathVariable long bookingId,
                                        @RequestParam("approved") boolean approved) {
-        return service.changeBookingStatus(approved);
+        return service.changeBookingStatus(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public Booking getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                               @PathVariable long bookingId) {
-        return service.getBooking(bookingId);
+        return service.getBooking(userId, bookingId);
     }
 
     @GetMapping

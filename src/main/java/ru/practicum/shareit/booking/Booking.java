@@ -29,5 +29,5 @@ public class Booking {
     private User booker;
 
     @Enumerated(value = EnumType.STRING)
-    private BookingStatus status;
+    private BookingStatus status = BookingStatus.WAITING;
 }
