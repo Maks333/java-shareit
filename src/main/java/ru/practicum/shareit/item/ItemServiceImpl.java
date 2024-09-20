@@ -50,31 +50,42 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto findById(long userId, long itemId) {
-        return ItemMapper.toItemDto(itemRepository.findByOwnerIdAndId(userId, itemId).orElseThrow(
-                () -> new NotFoundException("Item with id " + itemId + " is not found for user with id " + userId)
-        ));
+    public ItemDtoWithAdditionalInfo findById(long userId, long itemId) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
+        Item item = itemRepository.findById(itemId).orElseThrow(
+                () -> new NotFoundException("Item with id " + itemId + " is not found")
+        );
+        ItemDtoWithAdditionalInfo itemDto = ItemMapper.toItemDtoWithAdditionalInfo(item);
+        addAdditionalInfoToItem(itemDto);
+        return itemDto;
     }
 
     @Override
-    public List<ItemDtoWithDates> findAll(long userId) {
+    public List<ItemDtoWithAdditionalInfo> findAll(long userId) {
         userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User with id " + userId + " is not found"));
 
-        List<ItemDtoWithDates> items = itemRepository.findAllByOwnerId(userId).stream()
-                .map(ItemMapper::toItemDtoWithDates)
+        List<ItemDtoWithAdditionalInfo> items = itemRepository.findAllByOwnerId(userId).stream()
+                .map(ItemMapper::toItemDtoWithAdditionalInfo)
                 .toList();
 
-        items.forEach(item -> {
-            List<ItemBookingDateProjection> lastBooking =
-                    bookingRepository.findAllCurrentBookingsOfItem(item.getId(), LocalDateTime.now());
-            item.setLastBooking(lastBooking.isEmpty() ? null : lastBooking.getFirst());
-
-            List<ItemBookingDateProjection> nextBooking =
-                    bookingRepository.findAllFutureBookingsOfItem(item.getId(), LocalDateTime.now());
-            item.setNextBooking(nextBooking.isEmpty() ? null : nextBooking.getFirst());
-        });
+        items.forEach(this::addAdditionalInfoToItem);
         return items;
+    }
+
+    private void addAdditionalInfoToItem(ItemDtoWithAdditionalInfo item) {
+        List<ItemBookingDateProjection> lastBooking =
+                bookingRepository.findAllCurrentBookingsOfItem(item.getId(), LocalDateTime.now());
+        item.setLastBooking(lastBooking.isEmpty() ? null : lastBooking.getFirst());
+
+        List<ItemBookingDateProjection> nextBooking =
+                bookingRepository.findAllFutureBookingsOfItem(item.getId(), LocalDateTime.now());
+        item.setNextBooking(nextBooking.isEmpty() ? null : nextBooking.getFirst());
+
+        List<CommentDto> comments = commentRepository.findAllByItemId(item.getId()).stream()
+                .map(CommentMapper::toCommentDto)
+                .toList();
+        item.setComments(comments);
     }
 
     @Override

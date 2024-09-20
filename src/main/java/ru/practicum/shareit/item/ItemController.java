@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithDates;
+import ru.practicum.shareit.item.dto.ItemDtoWithAdditionalInfo;
 
 import java.util.List;
 
@@ -31,13 +31,13 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto get(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDtoWithAdditionalInfo get(@RequestHeader("X-Sharer-User-Id") long userId,
                        @PathVariable long itemId) {
         return service.findById(userId, itemId);
     }
 
     @GetMapping
-    public List<ItemDtoWithDates> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemDtoWithAdditionalInfo> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
         return service.findAll(userId);
     }
 

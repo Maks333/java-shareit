@@ -27,8 +27,8 @@ public class ItemMapper {
         return bookedItemDto;
     }
 
-    public static ItemDtoWithDates toItemDtoWithDates(Item item) {
-        ItemDtoWithDates itemDto = new ItemDtoWithDates();
+    public static ItemDtoWithAdditionalInfo toItemDtoWithAdditionalInfo(Item item) {
+        ItemDtoWithAdditionalInfo itemDto = new ItemDtoWithAdditionalInfo();
         itemDto.setId(item.getId());
         itemDto.setName(item.getName());
         itemDto.setDescription(item.getDescription());
