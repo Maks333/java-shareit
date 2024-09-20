@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     CONSTRAINT booker_id_fr_k FOREIGN KEY(booker_id) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS comments(
+CREATE TABLE IF NOT EXISTS comments (
     id BIGINT GENERATED ALWAYS AS IDENTITY,
     text VARCHAR(512) NOT NULL,
     item_id BIGINT,
