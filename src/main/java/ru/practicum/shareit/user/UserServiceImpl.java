@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(long userId, @Valid UserDto userDto) {
         User user = repository.findById(userId).orElseThrow(() ->
-        new NotFoundException("User with " + userId + " is not found"));
+                new NotFoundException("User with " + userId + " is not found"));
 
         if (userDto.getEmail() != null && !userDto.getEmail().isBlank()) user.setEmail(userDto.getEmail());
         if (userDto.getName() != null && !userDto.getName().isBlank()) user.setName(userDto.getName());

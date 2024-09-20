@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class CommentCreateDto {
-    @NotNull @NotEmpty
+    @NotNull
+    @NotEmpty
     private String text;
 }

@@ -1,7 +1,10 @@
 package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
-import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.dto.CommentCreateDto;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithAdditionalInfo;
 
 import java.util.List;
 

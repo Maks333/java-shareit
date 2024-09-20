@@ -24,29 +24,26 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDto changeBookingStatus(@RequestHeader("X-Sharer-User-Id") long userId,
-                                       @PathVariable long bookingId,
-                                       @RequestParam("approved") boolean approved) {
+                                          @PathVariable long bookingId,
+                                          @RequestParam("approved") boolean approved) {
         return service.changeBookingStatus(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @PathVariable long bookingId) {
+                                 @PathVariable long bookingId) {
         return service.getBooking(bookingId, userId);
     }
 
     @GetMapping
-    public List<BookingDto> getAllBookingsMadeByUser
-            (@RequestHeader("X-Sharer-User-Id") long userId,
-             @RequestParam(name = "state", required = false, defaultValue = "ALL") String state) {
-
+    public List<BookingDto> getAllBookingsMadeByUser(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                     @RequestParam(name = "state", required = false, defaultValue = "ALL") String state) {
         return service.getAllBookingsMadeByUser(userId, BookingState.of(state));
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getAllBookingsForAllItemsOfUser
-            (@RequestHeader("X-Sharer-User-Id") long userId,
-             @RequestParam(name = "state", required = false, defaultValue = "ALL") String state) {
+    public List<BookingDto> getAllBookingsForAllItemsOfUser(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                            @RequestParam(name = "state", required = false, defaultValue = "ALL") String state) {
         return service.getAllBookingsForAllItemsOfUser(userId, BookingState.of(state));
     }
 }

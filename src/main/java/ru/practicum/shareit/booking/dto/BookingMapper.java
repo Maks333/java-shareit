@@ -12,7 +12,7 @@ public class BookingMapper {
         Booking booking = new Booking();
         booking.setStartDate(bookingDto.getStart());
         booking.setEndDate(bookingDto.getEnd());
-        return  booking;
+        return booking;
     }
 
     public static BookingDto toBookingDto(Booking booking) {
