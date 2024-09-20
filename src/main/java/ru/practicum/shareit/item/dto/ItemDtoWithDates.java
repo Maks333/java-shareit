@@ -8,6 +8,6 @@ public class ItemDtoWithDates {
     private String name;
     private String description;
     private Boolean available;
-    private ItemBookingDateProjection lastBookingDates;
-    private ItemBookingDateProjection nextBookingDates;
+    private ItemBookingDateProjection lastBooking;
+    private ItemBookingDateProjection nextBooking;
 }

@@ -2,8 +2,6 @@ package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.Booking;
@@ -60,21 +58,22 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDtoWithDates> findAll(long userId) {
-        PageRequest page = PageRequest.of(0, 2);
+        userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User with id " + userId + " is not found"));
+
         List<ItemDtoWithDates> items = itemRepository.findAllByOwnerId(userId).stream()
                 .map(ItemMapper::toItemDtoWithDates)
                 .toList();
 
         items.forEach(item -> {
-            Page<ItemBookingDateProjection> pages = bookingRepository.findItemBookingDates(item.getId(), page);
-            try {
-                List<ItemBookingDateProjection> dates = pages.getContent();
-                item.setLastBookingDates(dates.getFirst());
-                item.setNextBookingDates(dates.getLast());
-            } catch (RuntimeException ignored) {
-            }
-        });
+            List<ItemBookingDateProjection> lastBooking =
+                    bookingRepository.findAllCurrentBookingsOfItem(item.getId(), LocalDateTime.now());
+            item.setLastBooking(lastBooking.isEmpty() ? null : lastBooking.getFirst());
 
+            List<ItemBookingDateProjection> nextBooking =
+                    bookingRepository.findAllFutureBookingsOfItem(item.getId(), LocalDateTime.now());
+            item.setNextBooking(nextBooking.isEmpty() ? null : nextBooking.getFirst());
+        });
         return items;
     }
 
