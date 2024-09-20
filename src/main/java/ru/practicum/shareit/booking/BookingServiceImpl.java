@@ -52,8 +52,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto changeBookingStatus(long userId, long bookingId, boolean approved) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
-                new NotFoundException("Booking with " + bookingId + " is not found"));
+        Booking booking = getBookingById(bookingId);
 
         if (booking.getItem().getOwner().getId() != userId) {
             throw new RuntimeException("User with id " + userId + " is not owner of the item");
@@ -62,10 +61,14 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.toBookingDto(bookingRepository.save(booking));
     }
 
+    private Booking getBookingById(long bookingId) {
+        return bookingRepository.findById(bookingId).orElseThrow(() ->
+                new NotFoundException("Booking with " + bookingId + " is not found"));
+    }
+
     @Override
     public BookingDto getBooking(long bookingId, long userId) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
-                new NotFoundException("Booking with " + bookingId + " is not found"));
+        Booking booking = getBookingById(bookingId);
 
         if (booking.getBooker().getId() != userId && booking.getItem().getOwner().getId() != userId) {
             throw new RuntimeException("User with id " + userId + " is not owner/booker of the item");

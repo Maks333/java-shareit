@@ -39,8 +39,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto update(long userId, long itemId, ItemDto itemDto) {
-        Item item = itemRepository.findByOwnerIdAndId(userId, itemId).orElseThrow(
-                () -> new NotFoundException("Item with id " + itemId + " is not found for user with id " + userId));
+        Item item = getItemByOwnerIdAndItemId(userId, itemId);
 
         if (itemDto.getName() != null && !itemDto.getName().isBlank()) item.setName(itemDto.getName());
         if (itemDto.getDescription() != null && !itemDto.getDescription().isBlank())
@@ -49,14 +48,23 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
+    private Item getItemByOwnerIdAndItemId(long userId, long itemId) {
+        return itemRepository.findByOwnerIdAndId(userId, itemId).orElseThrow(
+                () -> new NotFoundException("Item with id " + itemId + " is not found for user with id " + userId));
+    }
+
     @Override
     public ItemDtoWithAdditionalInfo findById(long userId, long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Item with id " + itemId + " is not found")
-        );
+        Item item = getItemById(itemId);
         ItemDtoWithAdditionalInfo itemDto = ItemMapper.toItemDtoWithAdditionalInfo(item);
         addAdditionalInfoToItem(itemDto);
         return itemDto;
+    }
+
+    private Item getItemById(long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(
+                () -> new NotFoundException("Item with id " + itemId + " is not found")
+        );
     }
 
     @Override
