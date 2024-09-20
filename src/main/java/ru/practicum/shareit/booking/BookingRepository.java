@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.dto.ItemBookingDateProjection;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByBookerId(long userId, Sort sort);
@@ -50,4 +51,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             where o.id = ?1 and ?2 between b.startDate and b.endDate
             """)
     List<Booking> findAllCurrentBookingsOfSharer(long userId, LocalDateTime now, Sort sort);
+
+    Optional<Booking> findByBookerIdAndItemIdAndEndDateBeforeAndStatusIs(long userId, long itemId, LocalDateTime now, BookingStatus status);
 }

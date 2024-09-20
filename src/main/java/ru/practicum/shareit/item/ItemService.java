@@ -1,9 +1,7 @@
 package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
-import ru.practicum.shareit.item.dto.ItemBookingDateProjection;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithDates;
+import ru.practicum.shareit.item.dto.*;
 
 import java.util.List;
 
@@ -17,4 +15,6 @@ public interface ItemService {
     List<ItemDtoWithDates> findAll(long userId);
 
     List<ItemDto> searchAll(String text);
+
+    CommentDto createComment(long userId, long itemId, @Valid CommentCreateDto commentDto);
 }

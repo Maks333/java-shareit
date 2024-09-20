@@ -6,16 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.exceptions.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemBookingDateProjection;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithDates;
-import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public ItemDto create(long userId, @Valid ItemDto itemDto) {
@@ -81,5 +83,18 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAllAvailableByText(text).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CommentDto createComment(long userId, long itemId, @Valid CommentCreateDto commentDto) {
+        Booking booking = bookingRepository
+                .findByBookerIdAndItemIdAndEndDateBeforeAndStatusIs(userId, itemId, LocalDateTime.now(), BookingStatus.APPROVED)
+                .orElseThrow(() -> new RuntimeException("Item is not eligible for comment"));
+
+        Comment comment = new Comment();
+        comment.setItem(booking.getItem());
+        comment.setAuthor(booking.getBooker());
+        comment.setText(commentDto.getText());
+        return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
 }
