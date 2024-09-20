@@ -27,3 +27,14 @@ CREATE TABLE IF NOT EXISTS bookings (
     CONSTRAINT item_id_fr_k FOREIGN KEY(item_id) REFERENCES items(id),
     CONSTRAINT booker_id_fr_k FOREIGN KEY(booker_id) REFERENCES users(id)
 );
+
+CREATE TABLE IF NOT EXISTS comments(
+    id BIGINT GENERATED ALWAYS AS IDENTITY,
+    text VARCHAR(512) NOT NULL,
+    item_id BIGINT,
+    author_id BIGINT,
+    created TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    CONSTRAINT comments_id_pm_k PRIMARY KEY(id),
+    CONSTRAINT item_id_fr_k FOREIGN KEY(item_id) REFERENCES items(id),
+    CONSTRAINT author_id_fr_k FOREIGN KEY(author_id) REFERENCES users(id)
+);
