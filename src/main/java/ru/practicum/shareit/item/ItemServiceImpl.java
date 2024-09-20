@@ -51,7 +51,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDtoWithAdditionalInfo findById(long userId, long itemId) {
-        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
         Item item = itemRepository.findById(itemId).orElseThrow(
                 () -> new NotFoundException("Item with id " + itemId + " is not found")
         );
