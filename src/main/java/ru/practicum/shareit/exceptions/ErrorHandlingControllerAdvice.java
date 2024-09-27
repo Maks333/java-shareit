@@ -3,6 +3,7 @@ package ru.practicum.shareit.exceptions;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,14 +37,6 @@ public class ErrorHandlingControllerAdvice {
         return new ErrorMessage(e.getMessage());
     }
 
-    @ExceptionHandler(EmailIsNotUniqueException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ResponseBody
-    ErrorMessage onEmailIsNotUniqueException(EmailIsNotUniqueException e) {
-        log.error("EmailIsNotUniqueException: {}", e.getMessage());
-        return new ErrorMessage(e.getMessage());
-    }
-
     @ExceptionHandler(MissingRequestHeaderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -57,6 +50,22 @@ public class ErrorHandlingControllerAdvice {
     @ResponseBody
     ErrorMessage onUnauthorizedAccessException(UnauthorizedAccessException e) {
         log.error("UnauthorizedAccessException: {}", e.getMessage());
+        return new ErrorMessage(e.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    ErrorMessage onDataIntegrityViolationException(DataIntegrityViolationException e) {
+        log.error("DataIntegrityViolationException: {}", e.getMostSpecificCause().getMessage());
+        return new ErrorMessage(e.getMostSpecificCause().getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    ErrorMessage onRuntimeException(RuntimeException e) {
+        log.error("RuntimeException: {}", e.getMessage());
         return new ErrorMessage(e.getMessage());
     }
 }

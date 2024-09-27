@@ -26,18 +26,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(@Valid UserDto userDto) {
         User user = UserMapper.fromUserDto(userDto);
-        return UserMapper.toUserDto(repository.create(user));
+        return UserMapper.toUserDto(repository.save(user));
     }
 
     @Validated(OnUserUpdate.class)
     @Override
     public UserDto update(long userId, @Valid UserDto userDto) {
-        User user = UserMapper.fromUserDto(userDto);
-        return UserMapper.toUserDto(repository.update(userId, user));
+        User user = repository.findById(userId).orElseThrow(() ->
+                new NotFoundException("User with " + userId + " is not found"));
+
+        if (userDto.getEmail() != null && !userDto.getEmail().isBlank()) user.setEmail(userDto.getEmail());
+        if (userDto.getName() != null && !userDto.getName().isBlank()) user.setName(userDto.getName());
+
+        return UserMapper.toUserDto(repository.save(user));
     }
 
     @Override
     public void delete(long userId) {
-        repository.delete(userId);
+        repository.deleteById(userId);
     }
 }
