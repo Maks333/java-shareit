@@ -2,6 +2,7 @@ package ru.practicum.shareit.request;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import ru.practicum.shareit.user.User;
 
 import java.time.Instant;
 
@@ -17,4 +18,8 @@ public class ItemRequest {
     private Long id;
     private String description;
     private Instant created = Instant.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
