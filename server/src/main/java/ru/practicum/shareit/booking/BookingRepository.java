@@ -52,7 +52,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             """)
     List<Booking> findAllCurrentBookingsOfSharer(long userId, LocalDateTime now, Sort sort);
 
-    Optional<Booking> findByBookerIdAndItemIdAndEndDateBeforeAndStatusIs(long userId, long itemId, LocalDateTime now, BookingStatus status);
+    Optional<Booking> findByBookerIdAndItemIdAndEndDateLessThanEqualAndStatusIs(long userId, long itemId, LocalDateTime now, BookingStatus status);
 
     @Query(value = """
             select b from Booking as b

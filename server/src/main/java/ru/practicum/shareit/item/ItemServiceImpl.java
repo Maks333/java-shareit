@@ -16,7 +16,9 @@ import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -112,8 +114,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto createComment(long userId, long itemId, @Valid CommentCreateDto commentDto) {
+//        Booking booking = bookingRepository
+//                .findByBookerIdAndItemIdAndEndDateBeforeAndStatusIs(userId, itemId, LocalDateTime.now(), BookingStatus.APPROVED)
+//                .orElseThrow(() -> new RuntimeException("Item is not eligible for comment"));
         Booking booking = bookingRepository
-                .findByBookerIdAndItemIdAndEndDateBeforeAndStatusIs(userId, itemId, LocalDateTime.now(), BookingStatus.APPROVED)
+                .findByBookerIdAndItemIdAndEndDateLessThanEqualAndStatusIs(userId, itemId, LocalDateTime.now(), BookingStatus.APPROVED)
                 .orElseThrow(() -> new RuntimeException("Item is not eligible for comment"));
 
         Comment comment = new Comment();

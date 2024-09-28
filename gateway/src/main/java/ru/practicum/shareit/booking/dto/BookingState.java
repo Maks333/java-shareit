@@ -1,27 +1,18 @@
 package ru.practicum.shareit.booking.dto;
 
-import java.util.Optional;
-
 public enum BookingState {
-	// Все
-	ALL,
-	// Текущие
-	CURRENT,
-	// Будущие
-	FUTURE,
-	// Завершенные
-	PAST,
-	// Отклоненные
-	REJECTED,
-	// Ожидающие подтверждения
-	WAITING;
+    ALL, CURRENT, PAST, FUTURE, WAITING, REJECTED;
 
-	public static Optional<BookingState> from(String stringState) {
-		for (BookingState state : values()) {
-			if (state.name().equalsIgnoreCase(stringState)) {
-				return Optional.of(state);
-			}
-		}
-		return Optional.empty();
-	}
+    public static BookingState of(String value) {
+        if (value == null || value.isBlank()) throw new RuntimeException("State value is empty or null");
+        return switch (value.toUpperCase()) {
+            case "ALL" -> BookingState.ALL;
+            case "CURRENT" -> BookingState.CURRENT;
+            case "PAST" -> BookingState.PAST;
+            case "FUTURE" -> BookingState.FUTURE;
+            case "WAITING" -> BookingState.WAITING;
+            case "REJECTED" -> BookingState.REJECTED;
+            default -> throw new RuntimeException("Invalid state value: " + value);
+        };
+    }
 }
