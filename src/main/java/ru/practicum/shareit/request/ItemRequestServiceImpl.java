@@ -12,7 +12,6 @@ import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,19 +23,23 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto addRequest(long userId, ItemRequestCreateDto request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(""));
+        User user = getUser(userId);
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(request);
         itemRequest.setUser(user);
         return ItemRequestMapper.toItemRequestDto(itemRequestRepository.save(itemRequest));
     }
 
+    private User getUser(long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
+    }
+
     @Override
     public List<ItemRequestDto> getRequestsOfUser(long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("user with id " + userId + " is not found"));
+        checkUserExistence(userId);
         Sort sort = Sort.by("created").descending();
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByUserId(userId, sort);
-        //return getListOfItemRequestDtoWithResponses(itemRequests);
+
         return  itemRequests.stream()
                 .map(this::formRequestDtoWithResponses)
                 .toList();
@@ -44,6 +47,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getAllRequests(long userId) {
+        checkUserExistence(userId);
         Sort sort = Sort.by("created").descending();
         return itemRequestRepository.findAll(sort)
                 .stream()
@@ -53,17 +57,16 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto getRequestById(long userId, long requestId) {
-        return null;
+        checkUserExistence(userId);
+        ItemRequest itemRequest = itemRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException("Item request with id " + requestId + " is not found"));
+        return formRequestDtoWithResponses(itemRequest);
     }
 
-//    private List<ItemRequestDto> getListOfItemRequestDtoWithResponses(List<ItemRequest> requests) {
-//        List<ItemRequestDto> dtos = new ArrayList<>();
-//        for(ItemRequest request: requests) {
-//            List<Item> items = itemRepository.findAllByRequestId(request.getId());
-//            dtos.add(ItemRequestMapper.toItemRequestDto(request, items));
-//        }
-//        return dtos;
-//    }
+    private void checkUserExistence(long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("user with id " + userId + " is not found"));
+    }
 
     private ItemRequestDto formRequestDtoWithResponses(ItemRequest request) {
         List<Item> items = itemRepository.findAllByRequestId(request.getId());

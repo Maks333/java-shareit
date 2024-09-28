@@ -13,12 +13,12 @@ public class ItemRequestDto {
     private Long id;
     private String description;
     private String created;
-    private List<Response> responses = new ArrayList<>();
+    private List<Response> items = new ArrayList<>();
 
     @Data
     static class Response {
-        private Long itemId;
-        private String itemName;
+        private Long id;
+        private String name;
         private Long ownerId;
     }
 }

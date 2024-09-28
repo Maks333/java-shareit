@@ -25,14 +25,14 @@ public class ItemRequestMapper {
 
     public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest, List<Item> items) {
         ItemRequestDto dto = toItemRequestDto(itemRequest);
-        dto.setResponses(items.stream().map(ItemRequestMapper::toResponse).toList());
+        dto.setItems(items.stream().map(ItemRequestMapper::toResponse).toList());
         return dto;
     }
 
     private static ItemRequestDto.Response toResponse(Item item) {
         ItemRequestDto.Response response = new ItemRequestDto.Response();
-        response.setItemId(item.getId());
-        response.setItemName(item.getName());
+        response.setId(item.getId());
+        response.setName(item.getName());
         response.setOwnerId(item.getOwner().getId());
         return response;
     }
