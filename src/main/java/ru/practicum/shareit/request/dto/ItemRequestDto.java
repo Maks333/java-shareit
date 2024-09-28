@@ -13,5 +13,12 @@ public class ItemRequestDto {
     private Long id;
     private String description;
     private String created;
-    private List<String> responses = new ArrayList<>();
+    private List<Response> responses = new ArrayList<>();
+
+    @Data
+    static class Response {
+        private Long itemId;
+        private String itemName;
+        private Long ownerId;
+    }
 }
