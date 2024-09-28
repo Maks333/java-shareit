@@ -34,7 +34,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestDto> getRequestsOfUser(long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("user with id " + userId + " is not found"));
-        Sort sort = Sort.by("created").ascending();
+        Sort sort = Sort.by("created").descending();
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByUserId(userId, sort);
         //return getListOfItemRequestDtoWithResponses(itemRequests);
         return  itemRequests.stream()
@@ -44,7 +44,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getAllRequests(long userId) {
-        return List.of();
+        Sort sort = Sort.by("created").descending();
+        return itemRequestRepository.findAll(sort)
+                .stream()
+                .map(this::formRequestDtoWithResponses)
+                .toList();
     }
 
     @Override
