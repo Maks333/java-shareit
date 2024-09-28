@@ -23,7 +23,7 @@ public class ErrorHandlingControllerAdvice {
         log.error("Validation error: {}", e.getMessage());
         ValidationErrorResponse error = new ValidationErrorResponse();
         for (ConstraintViolation violation : e.getConstraintViolations()) {
-            error.getViolations().add(
+            error.getError().add(
                     new Violation(violation.getPropertyPath().toString(), violation.getMessage()));
         }
         return error;

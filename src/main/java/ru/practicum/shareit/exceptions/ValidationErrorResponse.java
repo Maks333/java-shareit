@@ -7,5 +7,5 @@ import java.util.List;
 
 @Getter
 public class ValidationErrorResponse {
-    private final List<Violation> violations = new ArrayList<>();
+    private final List<Violation> error = new ArrayList<>();
 }
