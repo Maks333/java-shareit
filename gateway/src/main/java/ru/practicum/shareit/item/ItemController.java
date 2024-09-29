@@ -7,11 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentCreateDto;
-import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithAdditionalInfo;
-
-import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -26,19 +22,19 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestHeader("X-Sharer-User-Id") long userId,
-                                 @RequestBody @Valid ItemDto itemDto) {
+                                         @RequestBody @Valid ItemDto itemDto) {
         return itemClient.create(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> update(@RequestHeader("X-Sharer-User-Id") long userId,
-                          @PathVariable long itemId, @RequestBody @Valid ItemDto itemDto) {
+                                         @PathVariable long itemId, @RequestBody @Valid ItemDto itemDto) {
         return itemClient.update(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> get(@RequestHeader("X-Sharer-User-Id") long userId,
-                                         @PathVariable long itemId) {
+                                      @PathVariable long itemId) {
         return itemClient.findById(userId, itemId);
     }
 
@@ -54,8 +50,8 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(@RequestHeader("X-Sharer-User-Id") long userId,
-                                    @PathVariable("itemId") long itemId,
-                                    @RequestBody @Valid CommentCreateDto commentDto) {
+                                                @PathVariable("itemId") long itemId,
+                                                @RequestBody @Valid CommentCreateDto commentDto) {
         return itemClient.createComment(userId, itemId, commentDto);
     }
 }

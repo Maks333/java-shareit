@@ -35,8 +35,8 @@ public class ItemControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private ItemDto itemDto = new ItemDto (
-           1L,
+    private ItemDto itemDto = new ItemDto(
+            1L,
             "name",
             "description",
             true,
@@ -61,10 +61,9 @@ public class ItemControllerTest {
     );
 
 
-
     @Test
     void createTest() throws Exception {
-        when(itemService.create(anyLong(),any()))
+        when(itemService.create(anyLong(), any()))
                 .thenReturn(itemDto);
 
         mvc.perform(MockMvcRequestBuilders.post("/items")

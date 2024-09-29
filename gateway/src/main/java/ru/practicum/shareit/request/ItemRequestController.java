@@ -7,9 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
-
-import java.util.List;
 
 /**
  * TODO Sprint add-item-requests.
@@ -23,7 +20,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<Object> addRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                                     @RequestBody @Valid ItemRequestCreateDto request) {
+                                             @RequestBody @Valid ItemRequestCreateDto request) {
         return itemRequestClient.addRequest(userId, request);
     }
 
@@ -39,7 +36,7 @@ public class ItemRequestController {
 
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
-                                         @PathVariable(name = "requestId") long requestId) {
+                                                 @PathVariable(name = "requestId") long requestId) {
         return itemRequestClient.getRequestById(userId, requestId);
     }
 }

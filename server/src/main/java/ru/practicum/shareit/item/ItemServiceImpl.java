@@ -1,9 +1,7 @@
 package ru.practicum.shareit.item;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatus;
@@ -16,14 +14,11 @@ import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Validated
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
@@ -33,7 +28,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestRepository itemRequestRepository;
 
     @Override
-    public ItemDto create(long userId, @Valid ItemDto itemDto) {
+    public ItemDto create(long userId, ItemDto itemDto) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("User with " + userId + " is not found"));
 
@@ -113,10 +108,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentDto createComment(long userId, long itemId, @Valid CommentCreateDto commentDto) {
-//        Booking booking = bookingRepository
-//                .findByBookerIdAndItemIdAndEndDateBeforeAndStatusIs(userId, itemId, LocalDateTime.now(), BookingStatus.APPROVED)
-//                .orElseThrow(() -> new RuntimeException("Item is not eligible for comment"));
+    public CommentDto createComment(long userId, long itemId, CommentCreateDto commentDto) {
         Booking booking = bookingRepository
                 .findByBookerIdAndItemIdAndEndDateLessThanEqualAndStatusIs(userId, itemId, LocalDateTime.now(), BookingStatus.APPROVED)
                 .orElseThrow(() -> new RuntimeException("Item is not eligible for comment"));

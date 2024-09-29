@@ -28,7 +28,7 @@ public class ItemControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private ItemDto itemDto = new ItemDto (
+    private ItemDto itemDto = new ItemDto(
             1L,
             "name",
             "description",
@@ -38,7 +38,7 @@ public class ItemControllerTest {
 
     @Test
     void validationNameTest() throws Exception {
-        when(itemClient.create(anyLong(),any()))
+        when(itemClient.create(anyLong(), any()))
                 .thenReturn(null);
 
         itemDto.setName(null);
@@ -53,7 +53,7 @@ public class ItemControllerTest {
 
     @Test
     void validationDescriptionTest() throws Exception {
-        when(itemClient.create(anyLong(),any()))
+        when(itemClient.create(anyLong(), any()))
                 .thenReturn(null);
 
         itemDto.setName("name");
@@ -69,7 +69,7 @@ public class ItemControllerTest {
 
     @Test
     void validationAvailableTest() throws Exception {
-        when(itemClient.create(anyLong(),any()))
+        when(itemClient.create(anyLong(), any()))
                 .thenReturn(null);
 
         itemDto.setName("name");

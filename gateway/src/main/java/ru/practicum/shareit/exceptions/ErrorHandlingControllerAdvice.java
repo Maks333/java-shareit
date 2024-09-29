@@ -28,14 +28,6 @@ public class ErrorHandlingControllerAdvice {
         return error;
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    ErrorMessage onNotFoundException(NotFoundException e) {
-        log.error("NotFoundException: {}", e.getMessage());
-        return new ErrorMessage(e.getMessage());
-    }
-
     @ExceptionHandler(MissingRequestHeaderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -44,21 +36,6 @@ public class ErrorHandlingControllerAdvice {
         return new ErrorMessage(e.getMessage());
     }
 
-    @ExceptionHandler(UnauthorizedAccessException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    ErrorMessage onUnauthorizedAccessException(UnauthorizedAccessException e) {
-        log.error("UnauthorizedAccessException: {}", e.getMessage());
-        return new ErrorMessage(e.getMessage());
-    }
-//
-//    @ExceptionHandler(DataIntegrityViolationException.class)
-//    @ResponseStatus(HttpStatus.CONFLICT)
-//    @ResponseBody
-//    ErrorMessage onDataIntegrityViolationException(DataIntegrityViolationException e) {
-//        log.error("DataIntegrityViolationException: {}", e.getMostSpecificCause().getMessage());
-//        return new ErrorMessage(e.getMostSpecificCause().getMessage());
-//    }
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
