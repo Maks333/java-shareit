@@ -28,10 +28,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto createBooking(long userId, BookingCreateDto bookingCreateDto) {
-        if (bookingCreateDto.getStart().equals(bookingCreateDto.getEnd())) {
-            throw new RuntimeException("Start and end dates should not be equal");
-        }
-
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("User with " + userId + " is not found"));
 

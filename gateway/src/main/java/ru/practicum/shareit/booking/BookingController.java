@@ -22,6 +22,9 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                                 @RequestBody @Valid BookingCreateDto booking) {
+        if (booking.getStart().equals(booking.getEnd())) {
+            throw new RuntimeException("Start and end dates should not be equal");
+        }
         return bookingClient.createBooking(userId, booking);
     }
 

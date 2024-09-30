@@ -25,7 +25,10 @@ public class ItemRequestMapper {
 
     public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest, List<Item> items) {
         ItemRequestDto dto = toItemRequestDto(itemRequest);
-        dto.setItems(items.stream().map(ItemRequestMapper::toResponse).toList());
+        dto.setItems(items.stream()
+                .map(ItemRequestMapper::toResponse)
+                .toList()
+        );
         return dto;
     }
 

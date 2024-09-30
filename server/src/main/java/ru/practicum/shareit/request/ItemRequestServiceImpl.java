@@ -12,7 +12,10 @@ import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,25 +37,22 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new NotFoundException("User with id " + userId + " is not found"));
     }
 
+
     @Override
     public List<ItemRequestDto> getRequestsOfUser(long userId) {
         checkUserExistence(userId);
         Sort sort = Sort.by("created").descending();
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByUserId(userId, sort);
 
-        return  itemRequests.stream()
-                .map(this::formRequestDtoWithResponses)
-                .toList();
+        return formRequestDtoWithResponses(itemRequests);
     }
 
     @Override
     public List<ItemRequestDto> getAllRequests(long userId) {
         checkUserExistence(userId);
         Sort sort = Sort.by("created").descending();
-        return itemRequestRepository.findAll(sort)
-                .stream()
-                .map(this::formRequestDtoWithResponses)
-                .toList();
+
+        return formRequestDtoWithResponses(itemRequestRepository.findAll(sort));
     }
 
     @Override
@@ -71,5 +71,32 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private ItemRequestDto formRequestDtoWithResponses(ItemRequest request) {
         List<Item> items = itemRepository.findAllByRequestId(request.getId());
         return ItemRequestMapper.toItemRequestDto(request, items);
+    }
+
+    private List<ItemRequestDto> formRequestDtoWithResponses(List<ItemRequest> requests) {
+        Map<Long, List<Item>> requestIdToItem = mapItemsForEveryRequest(requests);
+
+        return requests.stream()
+                .map(request -> ItemRequestMapper.toItemRequestDto(request, requestIdToItem.get(request.getId())))
+                .toList();
+    }
+
+    private Map<Long, List<Item>> mapItemsForEveryRequest(List<ItemRequest> requests) {
+        //map requests to requests id
+        List<Long> requestsId = requests.stream().map(ItemRequest::getId).toList();
+        //get all items by requests id
+        List<Item> requestItems = itemRepository.findAllByRequestIdIn(requestsId);
+
+        //create map and map new empty list to each request id
+        Map<Long, List<Item>> requestIdToItem = new HashMap<>();
+        requestsId.forEach(id -> requestIdToItem.put(id, new ArrayList<>()));
+
+        //populate map with items
+        requestItems.forEach(item -> {
+            List<Item> items = requestIdToItem.get(item.getRequest().getId());
+            items.add(item);
+        });
+
+        return requestIdToItem;
     }
 }

@@ -21,4 +21,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findAllAvailableByText(String text);
 
     List<Item> findAllByRequestId(long requestId);
+
+    List<Item> findAllByRequestIdIn(List<Long> requestsId);
 }
